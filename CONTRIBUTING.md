@@ -123,10 +123,10 @@ forcer quoi que ce soit.
 
 ## 8. À ne jamais faire
 
-- ❌ Pousser directement sur `main`.
-- ❌ Committer le fichier `.env` (il est dans `.gitignore`, on n'y touche pas).
-- ❌ Fusionner sa propre PR sans relecture.
-- ❌ `git push --force` sur `develop` ou `main`.
+-  Pousser directement sur `main`.
+-  Committer le fichier `.env` (il est dans `.gitignore`, on n'y touche pas).
+-  Fusionner sa propre PR sans relecture.
+-  `git push --force` sur `develop` ou `main`.
 
 ---
 
@@ -135,7 +135,7 @@ forcer quoi que ce soit.
 | Membre | Rôle technique | Chapeau Scrum |
 |--------|----------------|----------------|
 | JORDAN | Lead technique / Backend | Scrum Master |
-| YANN | Frontend React Native | Développement |
+| YAN | Frontend React Native | Développement |
 | WILFRED | Intégrations & temps réel | Développement |
 | ARCHANGE | QA / DevOps / Coordination doc | Product Owner |
 

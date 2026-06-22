@@ -1,4 +1,5 @@
 # Rapport de projet
+ « Brouillon de travail — le rapport final formaté sera déposé dans /livrables »
 
 Ce rapport est rédigé **au fil de l'eau**, pas à la fin. Chaque section est
 complétée au fur et à mesure de l'avancement.

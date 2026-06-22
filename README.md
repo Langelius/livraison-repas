@@ -42,10 +42,10 @@ Toute la documentation vit dans [`/docs`](./docs/README.md) (approche *docs-as-c
 
 | Membre | Rôle |
 |--------|------|
-| [Nom 1] | Lead technique / Backend |
-| [Nom 2] | Frontend React Native |
-| [Nom 3] | Intégrations & temps réel |
-| [Nom 4] | QA / DevOps / Coordination doc |
+| JORDAN | Lead technique / Backend |
+| YAN | Frontend React Native |
+| WILFRED | Intégrations & temps réel |
+| ARCHANGE | QA / DevOps / Coordination doc |
 
 ## Licence
 
