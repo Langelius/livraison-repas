@@ -51,4 +51,48 @@ async function connexion(requete, reponse) {
   reponse.json({ token: jeton, utilisateur: { id: utilisateur._id, nom: utilisateur.nom } });
 }
 
-module.exports = { inscription, connexion };
+async function obtenirProfil(requete, reponse) {
+  const utilisateur = await Utilisateur.findById(requete.utilisateur.id).select(
+    "-motDePasse"
+  );
+  if (!utilisateur) {
+    return reponse.status(404).json({ message: "Utilisateur introuvable" });
+  }
+  reponse.json({ utilisateur: utilisateur });
+}
+
+async function modifierProfil(requete, reponse) {
+  const { nom, courriel, adresse } = requete.body;
+  if (!nom && !courriel && !adresse) {
+    return reponse.status(400).json({ message: "Aucun champ à modifier" });
+  }
+
+  // Le courriel doit rester unique dans la collection
+  if (courriel) {
+    const existe = await Utilisateur.findOne({
+      courriel: courriel,
+      _id: { $ne: requete.utilisateur.id }
+    });
+    if (existe) {
+      return reponse.status(409).json({ message: "Courriel déjà utilisé" });
+    }
+  }
+
+  const champs = {};
+  if (nom) champs.nom = nom;
+  if (courriel) champs.courriel = courriel;
+  if (adresse) champs.adresse = adresse;
+
+  const utilisateur = await Utilisateur.findByIdAndUpdate(
+    requete.utilisateur.id,
+    champs,
+    { new: true }
+  ).select("-motDePasse");
+
+  if (!utilisateur) {
+    return reponse.status(404).json({ message: "Utilisateur introuvable" });
+  }
+  reponse.json({ utilisateur: utilisateur });
+}
+
+module.exports = { inscription, connexion, obtenirProfil, modifierProfil };
