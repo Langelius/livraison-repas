@@ -51,4 +51,14 @@ async function connexion(requete, reponse) {
   reponse.json({ token: jeton, utilisateur: { id: utilisateur._id, nom: utilisateur.nom } });
 }
 
-module.exports = { inscription, connexion };
+async function obtenirProfil(requete, reponse) {
+  const utilisateur = await Utilisateur.findById(requete.utilisateur.id).select(
+    "-motDePasse"
+  );
+  if (!utilisateur) {
+    return reponse.status(404).json({ message: "Utilisateur introuvable" });
+  }
+  reponse.json({ utilisateur: utilisateur });
+}
+
+module.exports = { inscription, connexion, obtenirProfil };
