@@ -1,4 +1,13 @@
-import { View, Text, FlatList, Pressable, Image, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Pressable,
+  Image,
+  StyleSheet,
+  TextInput,
+} from "react-native";
 import { useRouter } from "expo-router";
 
 const restaurants = [
@@ -27,13 +36,25 @@ const restaurants = [
 
 export default function Restaurants() {
   const router = useRouter();
+  const [recherche, setRecherche] = useState("");
+
+  const restaurantsFiltres = restaurants.filter((restaurant) =>
+    restaurant.nom.toLowerCase().includes(recherche.toLowerCase())
+  );
 
   return (
     <View style={styles.container}>
       <Text style={styles.titre}>Restaurants</Text>
 
+      <TextInput
+        placeholder="Rechercher un restaurant..."
+        value={recherche}
+        onChangeText={setRecherche}
+        style={styles.recherche}
+      />
+
       <FlatList
-        data={restaurants}
+        data={restaurantsFiltres}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <Pressable
@@ -64,6 +85,14 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 20,
+  },
+  recherche: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 20,
+    fontSize: 16,
   },
   carte: {
     backgroundColor: "#f5f5f5",
