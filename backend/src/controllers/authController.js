@@ -3,6 +3,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Utilisateur = require("../models/Utilisateur");
 
+// Un jeton sans expiration resterait valide pour toujours en cas de vol
+const DUREE_DE_VIE_JETON = "24h";
+
 async function inscription(requete, reponse) {
   const { nom, courriel, motDePasse } = requete.body;
   if (!nom || !courriel || !motDePasse) {
@@ -21,7 +24,9 @@ async function inscription(requete, reponse) {
     motDePasse: motDePasseHache
   });
 
-  const jeton = jwt.sign({ id: utilisateur._id }, process.env.JWT_SECRET);
+  const jeton = jwt.sign({ id: utilisateur._id }, process.env.JWT_SECRET, {
+    expiresIn: DUREE_DE_VIE_JETON
+  });
   reponse.status(201).json({
     token: jeton,
     utilisateur: { id: utilisateur._id, nom: utilisateur.nom }
@@ -40,7 +45,9 @@ async function connexion(requete, reponse) {
     return reponse.status(401).json({ message: "Identifiants invalides" });
   }
 
-  const jeton = jwt.sign({ id: utilisateur._id }, process.env.JWT_SECRET);
+  const jeton = jwt.sign({ id: utilisateur._id }, process.env.JWT_SECRET, {
+    expiresIn: DUREE_DE_VIE_JETON
+  });
   reponse.json({ token: jeton, utilisateur: { id: utilisateur._id, nom: utilisateur.nom } });
 }
 

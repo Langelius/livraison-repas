@@ -7,6 +7,9 @@ Base URL : `http://localhost:3000/api`
 Les routes protégées attendent un en-tête :
 `Authorization: Bearer <jeton JWT>`
 
+Le jeton est valide **24 heures**. Passé ce délai, l'API répond `401 Jeton invalide`
+et l'utilisateur doit se reconnecter.
+
 ---
 
 ### POST /auth/inscription
