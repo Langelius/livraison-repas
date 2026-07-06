@@ -15,10 +15,19 @@ npx react-native run-android   # ou : npx expo start
 ## Structure
 ```
 mobile/
-├── App.js            point d'entrée de l'application
+├── App.js            point d'entrée : navigation (connexion → accueil)
 └── src/
-    ├── ecrans/       écrans (accueil, menu, panier, suivi…)
+    ├── ecrans/       écrans (connexion, inscription, accueil, menu…)
     ├── composants/   composants réutilisables
-    ├── services/     appels API et Socket.IO
+    ├── services/     appels API, session (jeton JWT) et Socket.IO
     └── modeles/      modèles de données
 ```
+
+## Authentification (Sprint 1)
+
+- `EcranInscription` / `EcranConnexion` appellent l'API `/auth/inscription` et
+  `/auth/connexion`.
+- Le jeton JWT est conservé avec **AsyncStorage** (`serviceSession.js`) et
+  ajouté automatiquement aux requêtes par `clientHttp.js`.
+- La déconnexion efface le jeton du stockage local et ramène à l'écran de
+  connexion.
