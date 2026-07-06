@@ -7,5 +7,6 @@ const controleurAuth = require("../controllers/authController");
 routeur.post("/inscription", controleurAuth.inscription);
 routeur.post("/connexion", controleurAuth.connexion);
 routeur.get("/profil", verifierJeton, controleurAuth.obtenirProfil);
+routeur.put("/profil", verifierJeton, controleurAuth.modifierProfil);
 
 module.exports = routeur;
