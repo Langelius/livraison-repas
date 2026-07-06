@@ -30,6 +30,41 @@ Crée un compte utilisateur.
 ### POST /auth/connexion
 Authentifie un utilisateur et renvoie un jeton.
 
+**Corps**
+```json
+{ "courriel": "string", "motDePasse": "string" }
+```
+**Réponse 200**
+```json
+{ "token": "string", "utilisateur": { "id": "...", "nom": "..." } }
+```
+**Erreurs** : 401 (identifiants invalides)
+
+---
+
+### GET /auth/profil
+Renvoie le profil de l'utilisateur connecté (route protégée).
+
+**Réponse 200**
+```json
+{ "utilisateur": { "id": "...", "nom": "...", "courriel": "...", "adresse": "...", "role": "client" } }
+```
+**Erreurs** : 401 (jeton manquant ou invalide), 404 (utilisateur introuvable)
+
+---
+
+### PUT /auth/profil
+Modifie le profil de l'utilisateur connecté (route protégée).
+Champs modifiables : `nom`, `courriel`, `adresse`.
+
+**Corps**
+```json
+{ "nom": "string", "courriel": "string", "adresse": "string" }
+```
+**Réponse 200** : profil mis à jour (même format que GET /auth/profil)
+
+**Erreurs** : 400 (aucun champ à modifier), 401, 409 (courriel déjà utilisé)
+
 ---
 
 ### GET /restaurants
