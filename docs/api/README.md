@@ -67,6 +67,32 @@ Champs modifiables : `nom`, `courriel`, `adresse`.
 
 ---
 
+### POST /auth/mot-de-passe-oublie
+Génère un jeton de réinitialisation valide **1 heure**.
+
+**Corps**
+```json
+{ "courriel": "string" }
+```
+**Réponse 200** : message générique (identique que le courriel existe ou non).
+
+> Note pédagogique : sans service de courriel, le jeton est renvoyé dans la
+> réponse. En production, il serait envoyé par courriel à l'utilisateur.
+
+---
+
+### POST /auth/reinitialisation
+Change le mot de passe à l'aide du jeton de réinitialisation.
+
+**Corps**
+```json
+{ "courriel": "string", "jeton": "string", "nouveauMotDePasse": "string" }
+```
+**Réponse 200** : confirmation.
+**Erreurs** : 400 (champs manquants, jeton invalide ou expiré)
+
+---
+
 ### GET /restaurants
 Liste les restaurants disponibles. Filtres : `?categorie=pizza`.
 

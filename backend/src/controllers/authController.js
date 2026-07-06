@@ -1,4 +1,5 @@
 // Logique d'authentification
+const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Utilisateur = require("../models/Utilisateur");
@@ -95,4 +96,66 @@ async function modifierProfil(requete, reponse) {
   reponse.json({ utilisateur: utilisateur });
 }
 
-module.exports = { inscription, connexion, obtenirProfil, modifierProfil };
+async function motDePasseOublie(requete, reponse) {
+  const { courriel } = requete.body;
+  if (!courriel) {
+    return reponse.status(400).json({ message: "Champs manquants" });
+  }
+
+  const utilisateur = await Utilisateur.findOne({ courriel: courriel });
+
+  // Réponse identique que le courriel existe ou non, pour ne pas révéler
+  // quels comptes sont enregistrés
+  const messageGenerique =
+    "Si ce courriel est enregistré, un lien de réinitialisation a été envoyé";
+
+  if (!utilisateur) {
+    return reponse.json({ message: messageGenerique });
+  }
+
+  const jeton = crypto.randomBytes(32).toString("hex");
+  utilisateur.jetonReinitialisation = crypto
+    .createHash("sha256")
+    .update(jeton)
+    .digest("hex");
+  utilisateur.expirationJetonReinitialisation = new Date(Date.now() + 60 * 60 * 1000);
+  await utilisateur.save();
+
+  // Pas de service de courriel dans le cadre du cours : le jeton est renvoyé
+  // dans la réponse. En production, il serait envoyé par courriel.
+  reponse.json({ message: messageGenerique, jeton: jeton });
+}
+
+async function reinitialiserMotDePasse(requete, reponse) {
+  const { courriel, jeton, nouveauMotDePasse } = requete.body;
+  if (!courriel || !jeton || !nouveauMotDePasse) {
+    return reponse.status(400).json({ message: "Champs manquants" });
+  }
+
+  const jetonHache = crypto.createHash("sha256").update(jeton).digest("hex");
+  const utilisateur = await Utilisateur.findOne({
+    courriel: courriel,
+    jetonReinitialisation: jetonHache,
+    expirationJetonReinitialisation: { $gt: new Date() }
+  });
+
+  if (!utilisateur) {
+    return reponse.status(400).json({ message: "Jeton invalide ou expiré" });
+  }
+
+  utilisateur.motDePasse = await bcrypt.hash(nouveauMotDePasse, 10);
+  utilisateur.jetonReinitialisation = undefined;
+  utilisateur.expirationJetonReinitialisation = undefined;
+  await utilisateur.save();
+
+  reponse.json({ message: "Mot de passe réinitialisé, vous pouvez vous connecter" });
+}
+
+module.exports = {
+  inscription,
+  connexion,
+  obtenirProfil,
+  modifierProfil,
+  motDePasseOublie,
+  reinitialiserMotDePasse
+};

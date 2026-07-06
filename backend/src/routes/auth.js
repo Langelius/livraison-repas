@@ -8,5 +8,7 @@ routeur.post("/inscription", controleurAuth.inscription);
 routeur.post("/connexion", controleurAuth.connexion);
 routeur.get("/profil", verifierJeton, controleurAuth.obtenirProfil);
 routeur.put("/profil", verifierJeton, controleurAuth.modifierProfil);
+routeur.post("/mot-de-passe-oublie", controleurAuth.motDePasseOublie);
+routeur.post("/reinitialisation", controleurAuth.reinitialiserMotDePasse);
 
 module.exports = routeur;
