@@ -6,6 +6,27 @@ const verifierRole = require("../middleware/verifierRole");
 const controleurRestaurants = require("../controllers/restaurantsControleur");
 
 // Routes privées du propriétaire du restaurant
+
+console.log(
+  "Contrôleur chargé depuis :",
+  require.resolve("../controllers/restaurantsControleur"),
+);
+
+console.log("Fonctions exportées :", Object.keys(controleurRestaurants));
+console.log(
+  "dashboardRestaurant :",
+  typeof controleurRestaurants.dashboardRestaurant,
+);
+console.log("verifierJeton :", typeof verifierJeton);
+console.log("verifierRole :", typeof verifierRole);
+
+routeur.get(
+  "/dashboard",
+  verifierJeton,
+  verifierRole("restaurant"),
+  controleurRestaurants.dashboardRestaurant,
+);
+
 routeur.post(
   "/",
   verifierJeton,

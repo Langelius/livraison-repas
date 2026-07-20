@@ -1,10 +1,26 @@
-// Routes des commandes
 const express = require("express");
-const routeur = express.Router();
-const verifierJeton = require("../middleware/auth");
-const controleurCommandes = require("../controllers/commandesControleur");
 
-routeur.post("/", verifierJeton, controleurCommandes.creerCommande);
-routeur.get("/:id", verifierJeton, controleurCommandes.obtenirCommande);
+const controleurCommandes = require("../controllers/commandeControleur");
+const authentification = require("../middleware/auth");
 
-module.exports = routeur;
+const router = express.Router();
+
+router.post("/", authentification, controleurCommandes.creerCommande);
+
+router.get(
+  "/restaurant",
+  authentification,
+  controleurCommandes.listerCommandesRestaurant,
+);
+
+router.get("/:id", authentification, controleurCommandes.obtenirCommande);
+
+router.patch(
+  "/:id/statut",
+  authentification,
+  controleurCommandes.modifierStatutCommande,
+);
+
+router.delete("/:id", authentification, controleurCommandes.supprimerCommande);
+
+module.exports = router;
